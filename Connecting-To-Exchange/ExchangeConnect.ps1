@@ -1,16 +1,20 @@
-$AdminName = "RESIDENTIAL\woodso"
+# Self-elevate the script if required
+if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
+ if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
+  $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
+  Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
+  Exit
+ }
+}
 
-$Pass = Get-Content "C:\Users\woodso\Documents\cred.txt"
-$SecurePass = ConvertTo-SecureString -String $Pass -AsPlainText -Force
+Set-ExecutionPolicy Unrestricted
 
-$Cred = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $AdminName, $SecurePass
+$UserCredential = Get-Credential
 
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://rspex01.willmottresidential.co.uk/powershell/ -Credential $Cred -AllowRedirection
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://rspex01.willmottresidential.co.uk/PowerShell/ -Authentication Kerberos -Credential $UserCredential
 
 Import-PSSession $Session -DisableNameChecking
 
 Get-Mailbox
 
-Remove-PSSession $Session
-
-#This is not working and I don't know why.
+Remove-PSSession
