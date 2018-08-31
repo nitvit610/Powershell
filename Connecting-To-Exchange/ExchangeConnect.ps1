@@ -39,7 +39,6 @@ Do {
     $NewUserInput = Read-Host -Prompt "Please input the new users name (e.g. Oscar Woods)"
 
     Try {
-        Write-Host $NewUserInput
         $ErrorActionPreference = "Stop"
         Enable-Mailbox -Identity $NewUserInput
 
