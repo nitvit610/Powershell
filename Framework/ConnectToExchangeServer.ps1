@@ -1,26 +1,21 @@
-function ConnectExchange {
+Do {
+    Try {
+        $Failed = $false
+        $ErrorActionPreference = "Stop"
 
-    Set-ExecutionPolicy Unrestricted
+        $UserCredential = Get-Credential
 
-    Do {
-        Try {
-            $Failed = $false
-            $ErrorActionPreference = "Stop"
+        $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://rspex01.willmottresidential.co.uk/PowerShell/ -Authentication Kerberos -Credential $UserCredential
 
-            $UserCredential = Get-Credential
+        Import-PSSession $Session -DisableNameChecking
 
-            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://rspex01.willmottresidential.co.uk/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+    } Catch {
+        Write-Host "`nLogin attempt failed, please try again`n"
+        $Failed = $true
 
-            Import-PSSession $Session -DisableNameChecking
+    } Finally {
+        $ErrorActionPreference = "Continue"
 
-        } Catch {
-            Write-Host "`nLogin attempt failed, please try again`n"
-            $Failed = $true
+    }
 
-        } Finally {
-            $ErrorActionPreference = "Continue"
-
-        }
-
-    } While ($Failed -eq $true)
-}
+} While ($Failed -eq $true)
