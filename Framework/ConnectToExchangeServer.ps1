@@ -1,5 +1,7 @@
 function ConnectExchange {
 
+    Set-ExecutionPolicy Unrestricted
+
     Do {
         Try {
             $Failed = $false
