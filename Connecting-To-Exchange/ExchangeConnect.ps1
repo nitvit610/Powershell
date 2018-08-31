@@ -15,6 +15,6 @@ $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri ht
 
 Import-PSSession $Session -DisableNameChecking
 
-Get-Mailbox
+Enable-Mailbox -Identity "Test McTest"
 
 Remove-PSSession
